@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">  
+  <title>Grow Phone</title>
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/dashboard.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>  
+</head>
+<body>
+  <% include ./navi.ejs %>
+
+  <div class="container-fluid">
+    <div class="row">
+      <% include ./leftNavi.ejs %>
+
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+          <h1 class="h2"><%=title%></h1>               
+        </div>
+
+        <div class="table-responsive col-md-4">            
+          <table class="table table-bordered table-sm">
+            <thead class="thead-inverse">
+              <tr>
+                <th>ID</th>
+                <th>Name</th>                
+              </tr>
+            </thead>
+            <tbody>
+            <% if(errmsg) { %>
+                <tr>
+                  <td  colspan="2"><%=errmsg%></td>
+                </tr>
+            <%  } else {  %>
+              <% if(data) {
+                  for(var i=0; i<data.length; i++) { %>
+                <tr>
+                  <td><a href="javascript:goscore('<%- data[i].id %>');"><%- data[i].id %></a></td>
+                  <td><%- data[i].name %></td>
+                </tr>         
+              <% }
+              } 
+            }  %>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div> <!-- row -->
+  </div><!--container-fluid -->
+  <form name="f" id="f" method="post">
+    <input type="hidden" name="rid" id="rid" />
+  </form>
+  <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+  <script>
+    $(".nav a").removeClass('active');
+    $(".nav>li a:eq(1)").addClass('active')
+    feather.replace()   
+    
+    function goscore(rid){
+      $("#rid").val(rid)
+      $("#f").attr("action", "/score")
+      $("#f").submit();
+    }
+  </script>
+</body>
+</html>

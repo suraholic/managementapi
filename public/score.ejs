@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">  
+  <title>Grow Phone</title>
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/dashboard.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+</head>
+<body>
+  <% include ./navi.ejs %>
+
+  <div class="container-fluid">
+    <div class="row">
+      <% include ./leftNavi.ejs %>
+
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+          <h1 class="h2"><%=title%></h1>               
+        </div>
+
+        <div class="table-responsive col-md-4">            
+          <table class="table table-bordered table-sm">
+            <thead class="thead-inverse">
+              <tr>
+                <th>순위</th>
+                <th>Google ID</th>
+                <th>Display Name</th>                
+                <th>점수</th>
+              </tr>
+            </thead>
+            <tbody>
+          <% if(errmsg) { %>
+              <tr>
+                <td  colspan="4"><%=errmsg%></td>
+              </tr>
+          <%  } else {  %>
+              <% if(data) {
+                var score = 0;
+                for(var i=0; i<data.length; i++) { 
+                  score = data[i].scoreValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              %>
+                    <tr>
+                      <td><%- data[i].formattedScoreRank %></td>
+                      <td><a href="javascript:goscore('<%- data[i].player.playerId %>');"><%- data[i].player.playerId %></a></td>
+                      <td><%- data[i].player.displayName %></td>
+                      <td><%= score  %></td>
+                    </tr>         
+                  <% }  %>
+              <%  } %>
+         <% }  %>
+            
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div> <!-- row -->
+  </div><!--container-fluid -->
+  <form name="f" id="f" method="post">
+    <input type="hidden" name="gid" id="gid" />
+  </form>
+  <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+  <script>
+    $(".nav a").removeClass('active');
+    $(".nav>li a:eq(1)").addClass('active')
+    feather.replace()  
+    
+    function goscore(gid){
+      if(confirm('정말 순위에서 제외하시겠습니까?')){
+        $("#gid").val(gid)
+        $("#f").attr("action", "/hidden")
+        $("#f").submit();
+      }
+      
+    }
+        
+  </script>
+</body>
+</html>
